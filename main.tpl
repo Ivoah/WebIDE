@@ -38,6 +38,8 @@
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Open <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li><a href='/'>New</a></li>
+                        <li class="divider"></li>
                         <%def print_tree(tree):
                             for item in tree:
                                 if type(tree[item]) == dict:%>
