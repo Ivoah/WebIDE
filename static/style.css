@@ -1,4 +1,5 @@
 .CodeMirror {
+    height: auto;
     border: 1px solid #ddd;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
