@@ -1,6 +1,12 @@
 from bottle import get, post, route, run, debug, template, request, static_file, error, redirect
 import os, urllib
 
+try:
+    import editor
+    PYTHONISTA = True
+except ImportError:
+    PYTHONISTA = False
+
 ROOT = '../'
 
 def make_file_tree(path):
@@ -42,6 +48,7 @@ def edit():
 def submit():
     with open(os.path.join(ROOT, request.forms.get('filename')), 'w') as f:
         f.write(request.forms.get('code').replace('\r', ''))
+        if PYTHONISTA: editor.reload_files()
 
 @route('/static/<filepath:path>')
 def server_static(filepath):
