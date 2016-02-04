@@ -63,5 +63,5 @@ def mistake404(code):
     return 'This is not the page you\'re looking for *waves hand*'
 
 debug(True)
-run(reloader=True if not PYTHONISTA else False), host='0.0.0.0'
+run(reloader=True if not PYTHONISTA else False, host='0.0.0.0')
 #remember to remove reloader=True and debug(True) when you move your application from development to a productive environment
