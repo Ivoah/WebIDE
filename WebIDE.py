@@ -60,8 +60,8 @@ def mistake403(code):
 
 @error(404)
 def mistake404(code):
-    return 'Sorry, this page does not exist!'
+    return 'This is not the page you\'re looking for *waves hand*'
 
 debug(True)
-run(reloader=True)
+run(reloader=True if not PYTHONISTA else False)
 #remember to remove reloader=True and debug(True) when you move your application from development to a productive environment
