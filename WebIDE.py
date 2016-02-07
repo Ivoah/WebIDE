@@ -14,7 +14,9 @@ def make_file_tree(path):
     def recur(path, list):
         for l in os.listdir(path):
             f = os.path.join(path, l)
-            if os.path.isdir(f):
+            if f[0] == '.':
+                continue
+            elif os.path.isdir(f):
                 list[l] = {}
                 recur(f, list[l])
             elif l.split('.')[-1] in ['py', 'txt']:
