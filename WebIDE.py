@@ -1,5 +1,5 @@
 from bottle import get, post, route, run, debug, template, request, static_file, error, redirect
-import os, urllib
+import os, urllib, json
 
 try:
     import editor
@@ -14,12 +14,12 @@ def make_file_tree(path):
     def recur(path, list):
         for l in os.listdir(path):
             f = os.path.join(path, l)
-            if f[0] == '.':
-                continue
+            if l[0] == '.':
+              continue
             elif os.path.isdir(f):
                 list[l] = {}
                 recur(f, list[l])
-            elif l.split('.')[-1] in ['py', 'txt', 'pyui']:
+            elif l.split('.')[-1] in ['py', 'txt', 'pyui', 'json']:
                 list[l] = urllib.pathname2url(f[len(ROOT):])
     recur(path, file_list)
     return file_list
@@ -41,6 +41,8 @@ def edit():
     file = request.GET.get('file')
     if file:
         code = open(os.path.join(ROOT, file), 'r').read()
+      	if file.split('.')[-1] in ['pyui', 'json']:
+            code = json.dumps(json.loads(code), indent=4, separators=(',', ': '))
         output = template('main.tpl', files = file_list, save_as = file, code = code)
     else:
         output = template('main.tpl', files = file_list)
