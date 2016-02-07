@@ -1,5 +1,5 @@
 from bottle import get, post, route, run, debug, template, request, static_file, error, redirect
-import os, urllib, json
+import json, os, urllib
 
 try:
     import editor
@@ -7,10 +7,10 @@ try:
 except ImportError:
     PYTHONISTA = False
 
-ROOT = '../'
+ROOT = os.pardir + os.path.sep  # '../'
 
-def make_file_tree(path):
-    file_list = {}
+def make_file_tree(dir_path=os.pardir):
+    file_dict = {}
     def recur(path, list):
         for l in os.listdir(path):
             f = os.path.join(path, l)
@@ -21,8 +21,8 @@ def make_file_tree(path):
                 recur(f, list[l])
             elif l.split('.')[-1] in ['py', 'txt', 'pyui', 'json']:
                 list[l] = urllib.pathname2url(f[len(ROOT):])
-    recur(path, file_list)
-    return file_list
+    recur(dir_path, file_dict)
+    return file_dict
 
 @get('/')
 def edit():
@@ -40,7 +40,8 @@ def edit():
     file_list = make_file_tree('..')
     file = request.GET.get('file')
     if file:
-        code = open(os.path.join(ROOT, file), 'r').read()
+        with open(os.path.join(ROOT, file), 'r') as in_file:
+            code = in_file.read()
       	if file.split('.')[-1] in ['pyui', 'json']:
             code = json.dumps(json.loads(code), indent=4, separators=(',', ': '))
         output = template('main.tpl', files = file_list, save_as = file, code = code)
@@ -50,9 +51,11 @@ def edit():
 
 @post('/')
 def submit():
-    with open(os.path.join(ROOT, request.forms.get('filename')), 'w') as f:
+    filename = os.path.join(ROOT, request.forms.get('filename'))
+    with open(filename, 'w') as f:
         f.write(request.forms.get('code').replace('\r', ''))
-        if PYTHONISTA: editor.reload_files()
+    if PYTHONISTA:
+        editor.reload_files()
 
 @route('/static/<filepath:path>')
 def server_static(filepath):
@@ -64,8 +67,8 @@ def mistake403(code):
 
 @error(404)
 def mistake404(code):
-    return 'This is not the page you\'re looking for *waves hand*'
+    return "This is not the page you're looking for *waves hand*"
 
 debug(True)
-run(reloader=True if not PYTHONISTA else False, host='0.0.0.0')
+run(reloader=not PYTHONISTA, host='0.0.0.0')
 #remember to remove reloader=True and debug(True) when you move your application from development to a productive environment
