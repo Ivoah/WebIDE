@@ -19,7 +19,7 @@ def make_file_tree(path):
             elif os.path.isdir(f):
                 list[l] = {}
                 recur(f, list[l])
-            elif l.split('.')[-1] in ['py', 'txt']:
+            elif l.split('.')[-1] in ['py', 'txt', 'pyui']:
                 list[l] = urllib.pathname2url(f[len(ROOT):])
     recur(path, file_list)
     return file_list
