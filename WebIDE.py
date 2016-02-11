@@ -7,9 +7,9 @@ try:
 except ImportError:
     PYTHONISTA = False
 
-ROOT = os.pardir + os.path.sep  # '../'
+ROOT = os.path.expanduser('~/Documents')
 
-def make_file_tree(dir_path=os.pardir):
+def make_file_tree(dir_path=ROOT):
     file_dict = {}
     def recur(path, list):
         for l in os.listdir(path):
@@ -37,7 +37,7 @@ def edit():
     #        }
     #    }
     #}
-    file_list = make_file_tree('..')
+    file_list = make_file_tree(ROOT)
     file = request.GET.get('file')
     if file:
         with open(os.path.join(ROOT, file), 'r') as in_file:
@@ -76,4 +76,3 @@ print('''\nTo remotely edit Pythonista files:
    On your computer open a web browser to http://{}:8080'''.format(get_local_ip_addr()))
 debug(True)
 run(reloader=not PYTHONISTA, host='0.0.0.0')
-#remember to remove reloader=True and debug(True) when you move your application from development to a productive environment
