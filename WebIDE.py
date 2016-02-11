@@ -1,5 +1,5 @@
 from bottle import get, post, route, run, debug, template, request, static_file, error, redirect
-import json, os, socket, urllib
+import json, os, urllib
 
 try:
     import editor
@@ -15,7 +15,7 @@ def make_file_tree(dir_path=ROOT):
         for l in os.listdir(path):
             f = os.path.join(path, l)
             if l[0] == '.':
-                continue
+              continue
             elif os.path.isdir(f):
                 list[l] = {}
                 recur(f, list[l])
@@ -69,10 +69,5 @@ def mistake403(code):
 def mistake404(code):
     return "This is not the page you're looking for *waves hand*"
 
-def get_local_ip_addr():
-    return socket.gethostbyname(socket.getfqdn())
-
-print('''\nTo remotely edit Pythonista files:
-   On your computer open a web browser to http://{}:8080'''.format(get_local_ip_addr()))
 debug(True)
 run(reloader=not PYTHONISTA, host='0.0.0.0')
