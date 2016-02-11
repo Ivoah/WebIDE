@@ -1,5 +1,5 @@
 from bottle import get, post, route, run, debug, template, request, static_file, error, redirect
-import contextlib, json, os, socket, urllib
+import json, os, socket, urllib
 
 try:
     import editor
@@ -70,10 +70,7 @@ def mistake404(code):
     return "This is not the page you're looking for *waves hand*"
 
 def get_local_ip_addr():
-    with contextlib.closing(
-        socket.socket(socket.AF_INET, socket.SOCK_DGRAM)) as s:
-            s.connect(('8.8.8.8', 80))
-            return s.getsockname()[0]
+    return socket.gethostbyname(socket.getfqdn())
 
 print('''\nTo remotely edit Pythonista files:
    On your computer open a web browser to http://{}:8080'''.format(get_local_ip_addr()))
