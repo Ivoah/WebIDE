@@ -10,7 +10,6 @@ except ImportError:
 ROOT = os.path.expanduser('~/Documents')
 
 def make_file_tree(dir_path=ROOT):
-    dir_path = dir_path[:-1] if dir_path[-1] == '/' else dir_path
     file_dict = {}
     def recur(path, list):
         for l in os.listdir(path):
@@ -22,7 +21,7 @@ def make_file_tree(dir_path=ROOT):
                 recur(f, list[l])
             elif l.split('.')[-1] in ['py', 'txt', 'pyui', 'json']:
                 list[l] = urllib.pathname2url(f[len(dir_path)+1:])
-    recur(dir_path, file_dict)
+    recur(dir_path.rstrip('/'), file_dict)
     return file_dict
 
 @get('/')
