@@ -8,6 +8,7 @@ except ImportError:
     PYTHONISTA = False
 
 ROOT = os.path.expanduser('~/Documents')
+IDE_REL_ROOT = os.path.relpath(os.path.dirname(__file__), os.getcwd())
 
 def make_file_tree(dir_path=ROOT):
     file_dict = {}
@@ -44,9 +45,9 @@ def edit():
             code = in_file.read()
       	if file.split('.')[-1] in ['pyui', 'json']:
             code = json.dumps(json.loads(code), indent=4, separators=(',', ': '))
-        output = template('main.tpl', files = file_list, save_as = file, code = code)
+        output = template(os.path.join(IDE_REL_ROOT, 'main.tpl'), files = file_list, save_as = file, code = code)
     else:
-        output = template('main.tpl', files = file_list)
+        output = template(os.path.join(IDE_REL_ROOT, 'main.tpl'), files = file_list)
     return output
 
 @post('/')
