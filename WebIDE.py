@@ -3,6 +3,7 @@ import contextlib, json, os, socket, urllib
 
 try:
     import editor
+    from objc_util import *
     PYTHONISTA = True
 except ImportError:
     PYTHONISTA = False
@@ -55,8 +56,8 @@ def submit():
     filename = os.path.join(ROOT, request.forms.get('filename'))
     with open(filename, 'w') as f:
         f.write(request.forms.get('code').replace('\r', ''))
-    if PYTHONISTA:
-        editor.reload_files()
+    #if PYTHONISTA:
+        #editor.reload_files()
 
 @route('/static/<filepath:path>')
 def server_static(filepath):
@@ -79,5 +80,17 @@ def get_local_ip_addr():
 print('''\nTo remotely edit Pythonista files:
    On your computer open a web browser to http://{}:8080'''.format(get_local_ip_addr()))
 
-debug(True)
-run(reloader=not PYTHONISTA, host='0.0.0.0')
+if PYTHONISTA:
+    print('''\nIf you're using Safari to connect, you can simply select "Pythonista WebIDE" from the Bonjour menu (you may need to enable Bonjour in Safari's advanced preferences).\n''')
+    NSNetService = ObjCClass('NSNetService')
+    service = NSNetService.alloc().initWithDomain_type_name_port_('', '_http._tcp', 'Pythonista WebIDE 2', 8080)
+    try:
+        service.publish()
+        debug(True)
+        run(reloader=not PYTHONISTA, host='0.0.0.0')
+    finally:
+        service.stop()
+        service.release()
+else:
+    debug(True)
+    run(reloader=True, host='0.0.0.0')
