@@ -87,7 +87,7 @@ if PYTHONISTA:
     try:
         service.publish()
         debug(True)
-        run(reloader=not PYTHONISTA, host='0.0.0.0')
+        run(reloader=False, host='0.0.0.0')
     finally:
         service.stop()
         service.release()
