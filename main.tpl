@@ -69,6 +69,12 @@
         </nav>
 
         <div class="container">
+            %if defined('error'):
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {{error}}
+            </div>
+            %end
             <h2>Edit File</h2>
             <p>
                 <textarea name="code" id="codemirror" form="save">{{code if defined('code') else ''}}</textarea>

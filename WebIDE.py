@@ -14,6 +14,7 @@ ROOT = os.path.realpath('..') + '/'
 
 def make_file_tree(dir_path=ROOT):
     file_dict = {}
+    dir_path = dir_path.rstrip('/')
     def recur(path, list):
         for l in os.listdir(path):
             f = os.path.join(path, l)
@@ -24,7 +25,7 @@ def make_file_tree(dir_path=ROOT):
                 recur(f, list[l])
             elif l.split('.')[-1] in ['py', 'txt', 'pyui', 'json']:
                 list[l] = urllib.pathname2url(f[len(dir_path)+1:])
-    recur(dir_path.rstrip('/'), file_dict)
+    recur(dir_path, file_dict)
     return file_dict
 
 @get('/')
@@ -40,7 +41,6 @@ def edit():
     #        }
     #    }
     #}
-    file_list = make_file_tree(ROOT)
     filename = request.GET.get('filename')
     if filename:
         fullname = os.path.realpath(os.path.join(ROOT, filename))
@@ -49,22 +49,24 @@ def edit():
                 code = in_file.read()
                 if fullname.split('.')[-1] in ['pyui', 'json']:
                     code = json.dumps(json.loads(code), indent=4, separators=(',', ': '))
-                output = template('./main.tpl', files = file_list, save_as = filename, code = code)
+                output = template('./main.tpl', files = make_file_tree(ROOT), save_as = filename, code = code)
         else:
-            return error404(404)
+            return template('./main.tpl', files = make_file_tree(ROOT), error = 'Invalid filename')
     else:
-        output = template('./main.tpl', files = file_list)
+        output = template('./main.tpl', files = make_file_tree(ROOT))
     return output
 
 @post('/')
 def submit():
     filename = request.forms.get('filename')
     fullname = os.path.realpath(os.path.join(ROOT, filename))
-    if os.path.isfile(fullname) and fullname.startswith(ROOT):
+    if fullname.startswith(ROOT):
         with open(fullname, 'w') as f:
             f.write(request.forms.get('code').replace('\r', ''))
         if PYTHONISTA:
             editor.reload_files()
+    else:
+        return template('./main.tpl', files = make_file_tree(ROOT), error = 'Invalid filename')
 
 @route('/static/<filepath:path>')
 def server_static(filepath):
@@ -76,7 +78,7 @@ def error403(code):
 
 @error(404)
 def error404(code):
-    return "This is not the page you're looking for *waves hand*"
+    return template('./main.tpl', files = make_file_tree(ROOT), error = 'This is not the page you\'re looking for *waves hand*')
 
 def get_local_ip_addr():
     with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_DGRAM)) as s:
