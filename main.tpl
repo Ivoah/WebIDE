@@ -47,7 +47,7 @@
                                     <%print_tree(tree[item])%>
                                     </ul></li>
                                 <%else:%>
-                                    <li><a href="/?file={{tree[item]}}">{{item}}</a></li>
+                                    <li><a href="/?filename={{tree[item]}}">{{item}}</a></li>
                                 <%end
                             end
                         end%>
