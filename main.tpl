@@ -57,8 +57,8 @@
                 </ul>
                 <form action="/" class="navbar-form navbar-left" role="search" id="save" method="post">
                     <div class="form-group">
-                        %if defined('save_as'):
-                        <input name="filename" type="text" class="form-control" placeholder="Save as..." value="{{save_as}}">
+                        %if defined('filename'):
+                        <input name="filename" type="text" class="form-control" placeholder="Save as..." value="{{filename}}">
                         %else:
                         <input name="filename" type="text" class="form-control" placeholder="Save as...">
                         %end

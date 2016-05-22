@@ -49,7 +49,7 @@ def edit():
                 code = in_file.read()
                 if fullname.split('.')[-1] in ['pyui', 'json']:
                     code = json.dumps(json.loads(code), indent=4, separators=(',', ': '))
-                output = template('./main.tpl', files = make_file_tree(ROOT), save_as = filename, code = code)
+                output = template('./main.tpl', files = make_file_tree(ROOT), filename = filename, code = code)
         else:
             return template('./main.tpl', files = make_file_tree(ROOT), error = 'Invalid filename')
     else:
