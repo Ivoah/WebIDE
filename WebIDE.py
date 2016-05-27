@@ -1,5 +1,5 @@
 from bottle import get, post, route, run, debug, template, request, static_file, error, redirect # Import bottle's functions (from bottle import * might be better)
-import contextlib, json, os, socket # Import standard python libraries that we need
+import json, os, socket, errno # Import standard python libraries that we need
 
 try:
     from urllib.request import pathname2url # Try to import pathname2url from the python 3 location
@@ -17,8 +17,7 @@ IDE_ROOT = os.path.dirname(os.path.realpath(__file__)) # Find the root directory
 os.chdir(IDE_ROOT) # Make sure we're in it
 ROOT = os.path.realpath('..') + '/' # Get the folder just above us (presumably the one that has all the stuff you want to edit)
 
-def make_file_tree(dir_path=ROOT):
-    # Make a dict of the folder hierarchy (starting at ROOT if not specified)
+def make_file_tree(dir_path=ROOT): # Make a dict of the folder hierarchy (starting at ROOT if not specified)
     # It looks something like this:
     '''
     file_list = {
@@ -90,24 +89,31 @@ def error404(code): # This function will be called whenever there is a 404 error
     return template('./main.tpl', files = make_file_tree(ROOT), error = 'This is not the page you\'re looking for *waves hand*') # Guess what this does? Yep, yell at the user
 
 def get_local_ip_addr(): # Get the local ip address of the device
-    with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_DGRAM)) as s: # Make a socket object
-            s.connect(('8.8.8.8', 80)) # Connect to google
-            return s.getsockname()[0] # And get our ip address from the socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Make a socket object
+    s.connect(('8.8.8.8', 80)) # Connect to google
+    ip = s.getsockname()[0] # Get our IP address from the socket
+    s.close() # Close the socket
+    return ip # And return the IP address
 
 print('''\nTo remotely edit files:
    On your computer open a web browser to http://{}:8080'''.format(get_local_ip_addr())) # Print out some instructions
 
+debug(True) # Set debugging mode to true (shows detailed errors and such)
 if PYTHONISTA: # If we are running in Pythonista...
     print('''\nIf you're using Safari to connect, you can simply select "Pythonista WebIDE" from the Bonjour menu (you may need to enable Bonjour in Safari's advanced preferences).\n''') # Print out more (Pythonista specific) instructions
     NSNetService = ObjCClass('NSNetService') # Do some Objective-C magic
     service = NSNetService.alloc().initWithDomain_type_name_port_('', '_http._tcp', 'Pythonista WebIDE', 8080) # Do ALL THE MAGICS!
     try: # Try to publish our service (I guess)
         service.publish() # Publish our service so Bonjour things can find it
-        debug(True) # Set the debugging mode to true
         run(reloader=False, host='0.0.0.0') # And finally run the actual site (without reloading, as that doesn't work in Pythonista)
     finally: # When all is said and done...
         service.stop() # Stop the service
         service.release() # And release it from it's shackles
 else: # Looks like we're running on a normal computer...
-    debug(True) # Set the debugging mode to true
-    run(reloader=True, host='0.0.0.0') # And run the site! (with reloading, horray!)
+    try: # This block will try to run with reloading, and fall back gracefully if it isn't supported'
+        run(reloader=True, host='0.0.0.0') # Try to run the site with reloading
+    except OSError as e: # Uh oh, no reloading for us today
+        if e.errno == errno.EPERM: # If it's a permission error'
+            run(reloader=False, host='0.0.0.0') # Then run the site without reloading
+        else: # The error wasn't related to reloading'
+            raise e # So raise it back up again
