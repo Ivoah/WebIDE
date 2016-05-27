@@ -33,6 +33,7 @@
 .solar-green-background { background: #859900; }
 
 .CodeMirror {
+    font-family: mononoki, monospace;
     height: auto;
     border: 1px solid #ddd;
     border-top-left-radius: 10px;
