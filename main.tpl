@@ -9,11 +9,22 @@
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/codemirror.min.css">
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/codemirror.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/mode/python/python.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.11.0/mode/javascript/javascript.min.js"></script>
         <script type="text/javascript">
             window.onload = function() {
                 var editor = CodeMirror.fromTextArea(document.getElementById("codemirror"), {
                     lineNumbers: true,
-                    mode: "python"
+                    <%if defined('filename'):
+                        import os.path
+                        ext = os.path.splitext(filename)[1][1:]
+                        if ext == 'py':%>
+                            mode: "python"
+                        %elif ext in ['json', 'pyui']:
+                            mode: {name: "javascript", json: true}
+                        %else:
+                            mode: false
+                        <%end
+                    end%>
                 });
 
                 $("#submit").click(function() {
