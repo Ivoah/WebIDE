@@ -1,5 +1,10 @@
 from bottle import get, post, route, run, debug, template, request, static_file, error, redirect # Import bottle's functions (from bottle import * might be better)
-import contextlib, json, os, socket, urllib # Import standard python libraries that we need
+import contextlib, json, os, socket # Import standard python libraries that we need
+
+try:
+    from urllib.request import pathname2url # Try to import pathname2url from the python 3 location
+except ImportError:
+    from urllib import pathname2url # Whoops, looks like we're python 2
 
 try: # Try to import Pythonista specific libraries
     import editor # For reloading files in pythonista
@@ -39,7 +44,7 @@ def make_file_tree(dir_path=ROOT):
                 list[l] = {} # Then make a new sub-dict for our tree
                 recur(f, list[l]) # And run the recur function on our newly found directory
             elif l.split('.')[-1] in ['py', 'txt', 'pyui', 'json']: # Or if we found a valid file...
-                list[l] = urllib.pathname2url(f[len(dir_path)+1:]) # Then add the filename to the tree along with it's full pathname (relative to ROOT)
+                list[l] = pathname2url(f[len(dir_path)+1:]) # Then add the filename to the tree along with it's full pathname (relative to ROOT)
     recur(dir_path, file_dict) # Start the chain reaction
     return file_dict # And then return our baby tree (they grow up so fast *sniffle*)
 
