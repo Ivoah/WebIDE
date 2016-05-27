@@ -1,3 +1,37 @@
+.base03-color { color: #002b36; }
+.base02-color { color: #073642; }
+.base01-color { color: #586e75; }
+.base00-color { color: #657b83; }
+.base0-color { color: #839496; }
+.base1-color { color: #93a1a1; }
+.base2-color { color: #eee8d5; }
+.base3-color { color: #fdf6e3; }
+.solar-yellow-color { color: #b58900; }
+.solar-orange-color { color: #cb4b16; }
+.solar-red-color { color: #dc322f; }
+.solar-magenta-color { color: #d33682; }
+.solar-violet-color { color: #6c71c4; }
+.solar-blue-color { color: #268bd2; }
+.solar-cyan-color { color: #2aa198; }
+.solar-green-color { color: #859900; }
+
+.base03-background { background: #002b36; }
+.base02-background { background: #073642; }
+.base01-background { background: #586e75; }
+.base00-background { background: #657b83; }
+.base0-background { background: #839496; }
+.base1-background { background: #93a1a1; }
+.base2-background { background: #eee8d5; }
+.base3-background { background: #fdf6e3; }
+.solar-yellow-background { background: #b58900; }
+.solar-orange-background { background: #cb4b16; }
+.solar-red-background { background: #dc322f; }
+.solar-magenta-background { background: #d33682; }
+.solar-violet-background { background: #6c71c4; }
+.solar-blue-background { background: #268bd2; }
+.solar-cyan-background { background: #2aa198; }
+.solar-green-background { background: #859900; }
+
 .CodeMirror {
     height: auto;
     border: 1px solid #ddd;
