@@ -110,10 +110,10 @@ if PYTHONISTA: # If we are running in Pythonista...
         service.stop() # Stop the service
         service.release() # And release it from it's shackles
 else: # Looks like we're running on a normal computer...
-    try: # This block will try to run with reloading, and fall back gracefully if it isn't supported'
+    try: # This block will try to run with reloading, and fall back gracefully if it isn't supported
         run(reloader=True, host='0.0.0.0') # Try to run the site with reloading
     except OSError as e: # Uh oh, no reloading for us today
-        if e.errno == errno.EPERM: # If it's a permission error'
+        if e.errno == errno.EPERM: # If it's a permission error
             run(reloader=False, host='0.0.0.0') # Then run the site without reloading
-        else: # The error wasn't related to reloading'
+        else: # The error wasn't related to reloading
             raise e # So raise it back up again
