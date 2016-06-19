@@ -16,7 +16,7 @@ except ImportError: # If we can't import the Pythonista libraries...
 IDE_ROOT = os.path.dirname(os.path.realpath(__file__)) # Find the root directory of the program
 os.chdir(IDE_ROOT) # Make sure we're in it
 if PYTHONISTA:
-    ROOT = os.expanduser('~/Documents/') # If running under pythonista then set ROOT to be the documents folder
+    ROOT = os.path.expanduser('~/Documents/') # If running under pythonista then set ROOT to be the documents folder
 else:
     ROOT = os.path.realpath('..') + '/' # Otherwise set the folder just above us (presumably the one that has all the stuff you want to edit)
 
