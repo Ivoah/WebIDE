@@ -1,5 +1,5 @@
 from bottle import get, post, route, run, debug, template, request, static_file, error, redirect # Import bottle's functions (from bottle import * might be better)
-import json, os, socket, errno # Import standard python libraries that we need
+import os, socket, errno # Import standard python libraries that we need
 
 try:
     from urllib.request import pathname2url # Try to import pathname2url from the python 3 location
@@ -59,8 +59,6 @@ def edit(): # This function will get called for each GET request to /
         if os.path.isfile(fullname) and fullname.startswith(ROOT): # If it's a file, and it is inside our ROOT directory (for safety)
             with open(fullname, encoding = 'utf-8', mode = 'r') as in_file: # Open the file...
                 code = in_file.read() # And read all of it's juicy insides
-                if fullname.split('.')[-1] in ['pyui', 'json']: # If it's a JSON formatted file...
-                    code = json.dumps(json.loads(code), indent=4, separators=(',', ': ')) # Then make it look pretty
                 return template('./main.tpl', files = tree, filename = filename, code = code) # Read our template and give it the file tree, the name of the file, and the code
         else: # If it's not a file or not in the ROOT directory...
             return template('./main.tpl', files = tree, error = 'Invalid filename') # Then yell at the user for being an idiot
